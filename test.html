@@ -1,0 +1,77 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TipBot Deposit Page</title>
+  <meta name="description" content="Allows Discord users to deposit erc-20 tokens to their TipWallets">
+  <meta name="author" content="Owl">
+  <meta name="theme-color" content="#def2d9">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+
+<body id="body">
+
+    <div id="d-box" class="dialog-box">
+        <h2 id="d-name" class="dialog-box__name">Hello!</h2>
+        <p>You've landed on the TipBot deposit page!<br>
+            Follow those steps to simply <br>
+            And this is why we created a tool to help you sort a schedule suited to your needs.
+        </p>
+        <p><b>Enjoy!</b></p>
+    </div>
+
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	 <script src="./js/web3.min.js"></script>
+	 <script type="text/javascript">
+        window.addEventListener('load', function () {
+            if (typeof web3 !== 'undefined') {
+                console.log('Web3 Detected! ' + web3.currentProvider.constructor.name)
+                window.web3 = new Web3(web3.currentProvider);
+            }
+        })
+
+    </script>
+     <script>
+		 var BigNumber;
+
+
+        //  $(document).ready(async function() {
+        //     // Modern dapp browsers...
+        //     if (window.ethereum) {
+        //         window.web3 = new Web3(ethereum);
+        //         BigNumber = web3.BigNumber;
+        //         try {
+        //             // Request account access if needed
+        //             await ethereum.enable();
+        //             console.log("modern dapp browser");
+        //         } catch (error) {
+        //             // User denied account access...
+        //             console.log("User denied ethereum account access.")
+        //         }
+        //     }
+        //     // Legacy dapp browsers...
+        //     else if (window.web3) {
+        //         window.Web3 = new Web3(web3.currentProvider);
+        //         BigNumber = web3.BigNumber;
+        //         // Acccounts always exposed
+        //         console.log("legacy dapp browser");
+        //     }
+        //     // Non-dapp browsers...
+        //     else {
+        //         console.log('Non-Ethereum browser detected.');
+        //         //since we are using our own web3.min.js
+        //         let w3 = new Web3();
+        //         BigNumber = w3.BigNumber;
+		// 	}
+		// 	if (typeof web3 == 'undefined') {
+        //     document.write("web3 not detected. Are you using a web3 enabled browser like MetaMask?");
+        // }
+        // });
+        
+     </script>
+</body>
+</html>

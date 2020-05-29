@@ -1,0 +1,246 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TipBot Deposit Page</title>
+  <meta name="description" content="Allows Discord users to deposit erc-20 tokens to their TipWallets">
+  <meta name="author" content="Owl">
+  <meta name="theme-color" content="#def2d9">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+
+<body id="body">
+
+    <div id="d-box" class="dialog-box">
+        <h2 id="d-name" class="dialog-box__name">Hello!</h2>
+        <p>You've landed on the TipBot deposit page!<br>
+            Follow those steps to simply <br>
+            And this is why we created a tool to help you sort a schedule suited to your needs.
+        </p>
+        <p><b>Enjoy!</b></p>
+    </div>
+
+    <button type="button" id="start-button" class="button" name="action">Let's start</button>
+
+    <!-- CREATE YOUR SCHEDULE square starts here -->
+    <div class="phone hidden" id="phone">
+        <h1>5-minute Weekly Remote Work Schedule Maker</h1>
+        <div class="phone-center">
+
+            <form id="form_1" style="display: block">
+
+                <!-- QUESTION 1 -->
+
+                <div class="form__row">
+                    <h6 class="start_work_question">At what time do you start working?</h6>
+                    <div class="hourInput">
+                        <select id="startwork-h" class="selectHours" name="hours">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                        :
+                        <select id="startwork-m" class="selectMinutes" name="minutes">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                    </div>
+
+                </div>
+        
+                <!-- QUESTION 2 -->
+
+                <div class="form__row">
+                    <h6>At what time do you stop working?</h6>
+                    <div class="hourInput">
+                        <select id="stopwork-h" class="selectHours" name="hours">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                        :
+                        <select id="stopwork-m" class="selectMinutes" name="minutes">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                    </div>
+                </div>
+        
+                <!-- QUESTION 3 -->
+
+                <div class="form__row">
+                    <h6>Which days of the week are you working?</h6>
+                    <div class="input__group">
+                        <label for="">Select all days you are working</label>
+                        <div class="input__checkbox-buttons">
+                            <input type="checkbox" id="workDay0" name="weekDay">
+                            <label for="workDay0">Monday</label>
+                            <input type="checkbox" id="workDay1" name="weekDay">
+                            <label for="workDay1">Tuesday</label>
+                            <input type="checkbox" id="workDay2" name="weekDay">
+                            <label for="workDay2">Wednesday</label>
+                            <input type="checkbox" id="workDay3" name="weekDay">
+                            <label for="workDay3">Thursday</label>
+                            <input type="checkbox" id="workDay4" name="weekDay">
+                            <label for="workDay4">Friday</label>
+                            <input type="checkbox" id="workDay5" name="weekDay">
+                            <label for="workDay5">Saturday</label>
+                            <input type="checkbox" id="workDay6" name="weekDay">
+                            <label for="workDay6">Sunday</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+    
+            <!-- The form_2 below is displayed by nextStep2() function when the button is clicked (and form_1 above is hidden) -->
+
+            <form id="form_2" style="display: none">
+
+                <!-- QUESTION 1 -->
+
+                <div class="form__row">
+                    <h6 class="start_work_question">When would you like to have lunch?</h6>
+                    <div class="hourInput">
+                        <select id="lunch-h" class="selectHours" name="hours">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                        :
+                        <select id="lunch-m" class="selectMinutes" name="minutes">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                    </div>
+
+                </div>
+        
+                <!-- QUESTION 2 -->
+
+                <div class="form__row">
+                    <h6>And when would you like to have dinner?</h6>
+                    <div class="hourInput">
+                        <select id="dinner-h" class="selectHours" name="hours">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                        :
+                        <select id="dinner-m" class="selectMinutes" name="minutes">
+                            <!-- This HTML is filled by makeHourInputs() -->
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <!-- The form_3 below is displayed by nextStep2() function when the button is clicked (and form_1 above is hidden) -->
+
+            <form id="form_3" style="display: none">
+
+                <!-- QUESTION 1 -->
+
+                <div class="form__row">
+                    <h6 class="start_work_question">Your favorite physical activity</h6>
+                    <div class="input__group">
+                        <input type="text" id="exercise-act" placeholder="running/workout/etc...">
+                      </div>
+
+                </div>
+        
+                <!-- QUESTION 2 -->
+
+                <div class="form__row">
+                    <h6 class="start_work_question">Your favorite zen and calming activity</h6>
+                    <div class="input__group">
+                        <input type="text" id="zen-act" placeholder="yoga/meditation/etc...">
+                      </div>
+
+                </div>
+            </form>
+
+            <!-- Final result below is displayed by finalResult() when the finish button is clicked (and previous form is hidden) -->
+            <div id='finalResult' style="display: none">
+                <div id="weekdays">
+                    <p id="emptyDay">      </p>
+                    <p>Monday</p>
+                    <p>Tuesday</p>
+                    <p>Wednesday</p>
+                    <p>Thursday</p>
+                    <p>Friday</p>
+                    <p>Saturday</p>
+                    <p>Sunday</p>
+                </div>
+                <div id="calendarAndHours">
+                    <div class="day" id="hourCol">
+                        <p class="hour">06:00 &nbsp-</p>
+                        <p class="hour">07:00 &nbsp-</p>
+                        <p class="hour">08:00 &nbsp-</p>
+                        <p class="hour">09:00 &nbsp-</p>
+                        <p class="hour">10:00 &nbsp-</p>
+                        <p class="hour">11:00 &nbsp-</p>
+                        <p class="hour">12:00 &nbsp-</p>
+                        <p class="hour">13:00 &nbsp-</p>
+                        <p class="hour">14:00 &nbsp-</p>
+                        <p class="hour">15:00 &nbsp-</p>
+                        <p class="hour">16:00 &nbsp-</p>
+                        <p class="hour">17:00 &nbsp-</p>
+                        <p class="hour">18:00 &nbsp-</p>
+                        <p class="hour">19:00 &nbsp-</p>
+                        <p class="hour">20:00 &nbsp-</p>
+                        <p class="hour">21:00 &nbsp-</p>
+                        <p class="hour">22:00 &nbsp-</p>
+                        <p class="hour">23:00 &nbsp-</p>
+                        <p class="hour">00:00 &nbsp-</p>
+                    </div>
+                    <div id="weekCalendar">
+                    </div>
+                </div>
+            </div>
+        </div>
+     <button type="button" id="next-button" class="button" name="action">Continue</button>
+
+     <div id="overlay" class="overlay-all overlay">
+        <div id="over-square" class="overlay-all over-text">
+            <p id="over-hour">-- : -- - --:--</p>
+            <p id="over-text" class="overlay-all over-text">Coucou!</p>
+            <div id="over-details" class="overlay-all over-details">
+            </div>
+        </div>
+     </div>
+     <script type="text/javascript" src="js/schedule.js"></script>
+     <script type="text/javascript" src="js/front.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script src="js/web3.min.js"></script>
+     <script>
+         var BigNumber;
+
+         $(document).ready(async function() {
+            // Modern dapp browsers...
+            if (window.ethereum) {
+                window.web3 = new Web3(ethereum);
+                BigNumber = web3.BigNumber;
+                try {
+                    // Request account access if needed
+                    await ethereum.enable();
+                    console.log("modern dapp browser");
+                } catch (error) {
+                    // User denied account access...
+                    console.log("User denied ethereum account access.")
+                }
+            }
+            // Legacy dapp browsers...
+            else if (window.Web3) {
+                window.Web3 = new Web3(Web3.currentProvider);
+                BigNumber = Web3.BigNumber;
+                // Acccounts always exposed
+                console.log("legacy dapp browser");
+            }
+            // Non-dapp browsers...
+            else {
+                console.log('Non-Ethereum browser detected.');
+                //since we are using our own web3.min.js
+                let w3 = new Web3();
+                BigNumber = w3.BigNumber;
+            }
+        });
+        
+     </script>
+     <script type="text/javascript">
+        window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);
+    </script>
+</body>
+</html>
