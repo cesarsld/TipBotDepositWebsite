@@ -1,6 +1,3 @@
-document.getElementById("next-button").addEventListener("click", nextStep1);
-document.getElementById("overlay").addEventListener("click", overlay);
-document.getElementById("start-button").addEventListener("click", displayForm);
 
 var prevTask
 

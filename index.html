@@ -11,202 +11,59 @@
   <meta name="theme-color" content="#def2d9">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-
+<script>
+             function sayHi(){
+             console.log("Hello!");
+         }
+</script>
 
 <body id="body">
 
     <div id="d-box" class="dialog-box">
         <h2 id="d-name" class="dialog-box__name">Hello!</h2>
         <p>You've landed on the TipBot deposit page!<br>
-            Follow those steps to simply <br>
-            And this is why we created a tool to help you sort a schedule suited to your needs.
+            Follow those steps to simply deposit tokens for you to use in Discord! <br>
         </p>
-        <p><b>Enjoy!</b></p>
+        <p><b>Step 1 - Token Contract spend approval</b></p>
+        <p>
+            You first need to send an approval transaction to allow the TipBot smart contract<br>to transfers your token on the following transaction.<br>
+            Don't worry, we will never transfer rmore token than you indicate<br>
+        </p>
+        <button type="button" id="start-button" class="button" onclick="sayHi()">Generate Token Approval Transaction</button>
+
+        <p><b>Step 2 - Send tokens to the TipBot smart contract!</b></p>
+        <p>
+            Now that we got approved, click on the next button to generate a transaction<br>indicating how much tokens you will be depositin<br>
+        </p>
+        <button type="button" id="start-button1" class="button" onclick="sayHi()">Generate Deposit Transaction</button>
+
     </div>
 
-    <button type="button" id="start-button" class="button" name="action">Let's start</button>
-
-    <!-- CREATE YOUR SCHEDULE square starts here -->
-    <div class="phone hidden" id="phone">
-        <h1>5-minute Weekly Remote Work Schedule Maker</h1>
-        <div class="phone-center">
-
-            <form id="form_1" style="display: block">
-
-                <!-- QUESTION 1 -->
-
-                <div class="form__row">
-                    <h6 class="start_work_question">At what time do you start working?</h6>
-                    <div class="hourInput">
-                        <select id="startwork-h" class="selectHours" name="hours">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                        :
-                        <select id="startwork-m" class="selectMinutes" name="minutes">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                    </div>
-
-                </div>
-        
-                <!-- QUESTION 2 -->
-
-                <div class="form__row">
-                    <h6>At what time do you stop working?</h6>
-                    <div class="hourInput">
-                        <select id="stopwork-h" class="selectHours" name="hours">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                        :
-                        <select id="stopwork-m" class="selectMinutes" name="minutes">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                    </div>
-                </div>
-        
-                <!-- QUESTION 3 -->
-
-                <div class="form__row">
-                    <h6>Which days of the week are you working?</h6>
-                    <div class="input__group">
-                        <label for="">Select all days you are working</label>
-                        <div class="input__checkbox-buttons">
-                            <input type="checkbox" id="workDay0" name="weekDay">
-                            <label for="workDay0">Monday</label>
-                            <input type="checkbox" id="workDay1" name="weekDay">
-                            <label for="workDay1">Tuesday</label>
-                            <input type="checkbox" id="workDay2" name="weekDay">
-                            <label for="workDay2">Wednesday</label>
-                            <input type="checkbox" id="workDay3" name="weekDay">
-                            <label for="workDay3">Thursday</label>
-                            <input type="checkbox" id="workDay4" name="weekDay">
-                            <label for="workDay4">Friday</label>
-                            <input type="checkbox" id="workDay5" name="weekDay">
-                            <label for="workDay5">Saturday</label>
-                            <input type="checkbox" id="workDay6" name="weekDay">
-                            <label for="workDay6">Sunday</label>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-    
-            <!-- The form_2 below is displayed by nextStep2() function when the button is clicked (and form_1 above is hidden) -->
-
-            <form id="form_2" style="display: none">
-
-                <!-- QUESTION 1 -->
-
-                <div class="form__row">
-                    <h6 class="start_work_question">When would you like to have lunch?</h6>
-                    <div class="hourInput">
-                        <select id="lunch-h" class="selectHours" name="hours">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                        :
-                        <select id="lunch-m" class="selectMinutes" name="minutes">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                    </div>
-
-                </div>
-        
-                <!-- QUESTION 2 -->
-
-                <div class="form__row">
-                    <h6>And when would you like to have dinner?</h6>
-                    <div class="hourInput">
-                        <select id="dinner-h" class="selectHours" name="hours">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                        :
-                        <select id="dinner-m" class="selectMinutes" name="minutes">
-                            <!-- This HTML is filled by makeHourInputs() -->
-                        </select>
-                    </div>
-                </div>
-            </form>
-
-            <!-- The form_3 below is displayed by nextStep2() function when the button is clicked (and form_1 above is hidden) -->
-
-            <form id="form_3" style="display: none">
-
-                <!-- QUESTION 1 -->
-
-                <div class="form__row">
-                    <h6 class="start_work_question">Your favorite physical activity</h6>
-                    <div class="input__group">
-                        <input type="text" id="exercise-act" placeholder="running/workout/etc...">
-                      </div>
-
-                </div>
-        
-                <!-- QUESTION 2 -->
-
-                <div class="form__row">
-                    <h6 class="start_work_question">Your favorite zen and calming activity</h6>
-                    <div class="input__group">
-                        <input type="text" id="zen-act" placeholder="yoga/meditation/etc...">
-                      </div>
-
-                </div>
-            </form>
-
-            <!-- Final result below is displayed by finalResult() when the finish button is clicked (and previous form is hidden) -->
-            <div id='finalResult' style="display: none">
-                <div id="weekdays">
-                    <p id="emptyDay">      </p>
-                    <p>Monday</p>
-                    <p>Tuesday</p>
-                    <p>Wednesday</p>
-                    <p>Thursday</p>
-                    <p>Friday</p>
-                    <p>Saturday</p>
-                    <p>Sunday</p>
-                </div>
-                <div id="calendarAndHours">
-                    <div class="day" id="hourCol">
-                        <p class="hour">06:00 &nbsp-</p>
-                        <p class="hour">07:00 &nbsp-</p>
-                        <p class="hour">08:00 &nbsp-</p>
-                        <p class="hour">09:00 &nbsp-</p>
-                        <p class="hour">10:00 &nbsp-</p>
-                        <p class="hour">11:00 &nbsp-</p>
-                        <p class="hour">12:00 &nbsp-</p>
-                        <p class="hour">13:00 &nbsp-</p>
-                        <p class="hour">14:00 &nbsp-</p>
-                        <p class="hour">15:00 &nbsp-</p>
-                        <p class="hour">16:00 &nbsp-</p>
-                        <p class="hour">17:00 &nbsp-</p>
-                        <p class="hour">18:00 &nbsp-</p>
-                        <p class="hour">19:00 &nbsp-</p>
-                        <p class="hour">20:00 &nbsp-</p>
-                        <p class="hour">21:00 &nbsp-</p>
-                        <p class="hour">22:00 &nbsp-</p>
-                        <p class="hour">23:00 &nbsp-</p>
-                        <p class="hour">00:00 &nbsp-</p>
-                    </div>
-                    <div id="weekCalendar">
-                    </div>
-                </div>
-            </div>
-        </div>
-     <button type="button" id="next-button" class="button" name="action">Continue</button>
-
-     <div id="overlay" class="overlay-all overlay">
-        <div id="over-square" class="overlay-all over-text">
-            <p id="over-hour">-- : -- - --:--</p>
-            <p id="over-text" class="overlay-all over-text">Coucou!</p>
-            <div id="over-details" class="overlay-all over-details">
-            </div>
-        </div>
-     </div>
-     <script type="text/javascript" src="js/schedule.js"></script>
      <script type="text/javascript" src="js/front.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
      <script src="js/web3.min.js"></script>
      <script>
-         var BigNumber;
+        var tokenAddress;
+        var amount;
+
+        var tipAddress = "";
+        var tipABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordDeposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordWithdrawal\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"balances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"depositToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOperator\",\"type\":\"address\"}],\"name\":\"transferOperatorRights\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"}],\"name\":\"viewBalanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"withdrawToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"}";
+
+        var d = window.location.href;
+        var url = new URL(d);
+        tokenAddress = url.searchParams.get("token");
+        amount = url.searchParams.get("amount");
+
+        console.log("token : " + tokenAddress);
+        console.log("amount : " + amount);
+
+        if (amount == null || tokenAddress == null)
+        {
+            document.getElementById("start-button").disabled = true;
+            document.getElementById("start-button1").disabled = true;
+        }
+
+
 
          $(document).ready(async function() {
             // Modern dapp browsers...
