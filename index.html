@@ -29,7 +29,7 @@
             You first need to send an approval transaction to allow the TipBot smart contract<br>to transfers your token on the following transaction.<br>
             Don't worry, we will never transfer rmore token than you indicate<br>
         </p>
-        <button type="button" id="start-button" class="button_valid" onclick="sayHi()">Generate Token Approval Transaction</button>
+        <button type="button" id="start-button" class="button" onclick="sayHi()">Generate Token Approval Transaction</button>
 
         <p><b>Step 2 - Send tokens to the TipBot smart contract!</b></p>
         <p>
@@ -84,37 +84,33 @@
                 let w3 = new Web3();
                 BigNumber = w3.BigNumber;
             }
+            userAddress = (await web3.eth.getAccounts())[0];
+            if (amount == null || tokenAddress == null || !isValidAddress(tokenAddress))
+            {
+                document.getElementById("start-button").disabled = true;
+                document.getElementById("start-button1").disabled = true;
+                console.log("No valid token address");
+            }
+            else
+            {
+                var event;
+                var tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
+                event = await tokenContract.getPastEvents("Approval",{
+                    fromBlock: 'earliest',
+                    toBlock: 'latest',
+                    topics:[
+                        web3.utils.sha3("Approval(address,address,uint256)"),
+                        '0x000000000000000000000000' + userAddress.substring(2),
+                        '0x000000000000000000000000' + tipAddress.substring(2)]});
+                if (event.length > 0)
+                {
+                    document.getElementById("start-button1").classList.remove("button");
+                    document.getElementById("start-button1").classList.add("button_valid");
+                    document.getElementById("start-button1").innerText = "You have already approved the token!";
+                }
+            }
         });
 
-        console.log("token : " + tokenAddress);
-        console.log("amount : " + amount);
-        if (amount == null || tokenAddress == null || !isValidAddress(tokenAddress))
-        {
-            document.getElementById("start-button").disabled = true;
-            document.getElementById("start-button1").disabled = true;
-            console.log("No valid token address");
-        }
-        else
-        {
-            web3.eth.getAccounts().then((add) => { userAddress = add[0]});
-            var event;
-            var tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
-            tokenContract.getPastEvents("Approval",{
-                fromBlock: 'earliest',
-                toBlock: 'latest',
-                topics:[
-                    web3.utils.sha3("Approval(address,address,uint256)"),
-                    '0x000000000000000000000000' + userAddress.substring(2),
-                    '0x000000000000000000000000' + tipAddress.substring(2)]}).then((e) => {
-                        event = e;
-                        if (event.length > 0)
-                        {
-                            document.getElementById("start-button1").classList.remove("button");
-                            document.getElementById("start-button1").classList.add("button_valid");
-                            document.getElementById("start-button1").innerText = "You have already approved the token!";
-                        }
-                    });
-        }
 
         function isValidAddress(add)
         {
