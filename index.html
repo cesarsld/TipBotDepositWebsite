@@ -88,8 +88,7 @@
 
         console.log("token : " + tokenAddress);
         console.log("amount : " + amount);
-
-        if (amount == null || tokenAddress == null || !web3.utils.isAddress(tokenAddress))
+        if (amount == null || tokenAddress == null || !isValidAddress(tokenAddress))
         {
             document.getElementById("start-button").disabled = true;
             document.getElementById("start-button1").disabled = true;
@@ -110,7 +109,14 @@
             console.log(event);
         }
 
-
+        function isValidAddress(add)
+        {
+            var regexp = /^[0-9a-fA-F]+$/;
+            if (add.startsWith('0x') &&  add.length === 42)
+                if (regexp.test(add.substring(2)))
+                    return  true;
+            return false;
+        }
 
         
      </script>
