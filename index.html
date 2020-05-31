@@ -163,7 +163,7 @@
             // .then(function(err, gas){
             //     estimateGas = gas;
             // });
-            tipContract.methods.depositToken(amount, tokenAddress, discordId).send({from : userAddress})
+            tipContract.methods.depositToken(amount, tokenAddress, discordId).send({from : userAddress, gas: 150000})
             .on('transactionHash', function(hash){
                 document.getElementById("start-button1").classList.remove("button");
                 document.getElementById("start-button1").classList.add("button_waiting");
