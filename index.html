@@ -185,7 +185,8 @@
 
         function generateApprovalTransaction()
         {
-            tokenContract.methods.approve(tipAddress, amount).send({from : userAddress})
+            var max = '1000000000000000000000000000000000000000000000000000000';
+            tokenContract.methods.approve(tipAddress, max).send({from : userAddress})
             .on('confirmation', function(confirmationNumber, receipt){
                 document.getElementById("start-button").classList.remove("button");
                 document.getElementById("start-button").classList.add("button_valid");
