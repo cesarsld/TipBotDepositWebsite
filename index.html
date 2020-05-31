@@ -43,10 +43,12 @@
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
      <script>
+         var discordId;
         var tokenAddress;
-        var amount;
         var userAddress = 'boo';
         var tokenContract;
+        var tipContract;
+        var amount;
 
         var tipAddress = "0xbA93ae6540846BF7Ea1Bc0995d272b78d3e6deD4";
         var tipABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordDeposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordWithdrawal\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"balances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"depositToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOperator\",\"type\":\"address\"}],\"name\":\"transferOperatorRights\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"}],\"name\":\"viewBalanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"withdrawToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]";
@@ -56,6 +58,7 @@
         var url = new URL(d);
         tokenAddress = url.searchParams.get("token");
         amount = url.searchParams.get("amount");
+        discordId = url.searchParams.get("discordId");
 
         $(document).ready(async function() {
             // Modern dapp browsers...
@@ -86,15 +89,17 @@
                 BigNumber = w3.BigNumber;
             }
             userAddress = (await web3.eth.getAccounts())[0];
-            if (amount == null || tokenAddress == null || !isValidAddress(tokenAddress))
+            if (amount == null || tokenAddress == null || !isValidAddress(tokenAddress)
+                || discordId == null || isUint64(discordId))
             {
                 document.getElementById("start-button").disabled = true;
                 document.getElementById("start-button1").disabled = true;
-                console.log("No valid token address");
+                alert("No valid token address");
             }
             else
             {
                 var event;
+                tipContract = new web3.eth.Contract(JSON.parse(tipABI), tipAddress);
                 tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
                 event = await tokenContract.getPastEvents("Approval",{
                     fromBlock: 'earliest',
@@ -107,8 +112,8 @@
                 {
                     document.getElementById("start-button").classList.remove("button");
                     document.getElementById("start-button").classList.add("button_valid");
-                    document.getElementById("start-button").innerText = "You have already approved the token!";
-                    document.getElementById("start-button").disabled = true;
+                    document.getElementById("start-button").innerText = "You have already unlocked the token!";
+                    // document.getElementById("start-button").disabled = true;
                 }
             }
         });
@@ -123,13 +128,42 @@
             return false;
         }
 
+        function isUint64(id)
+        {
+            var regexp = /^[0-9]+$/;
+            if (regexp.test(id))
+                return  true;
+            return false;
+        }
+
         document.getElementById("start-button").addEventListener('click', function(){
-            generateApprovalTransaction(tokenAddress, userAddress)
+            generateApprovalTransaction(tokenAddress, userAddress);
         });
 
-        function generateApprovalTransaction(token, user)
+        document.getElementById("start-button1").addEventListener('click', function(){
+            generateDepositTokenTransaction();
+        });
+
+        function generateApprovalTransaction()
         {
             tokenContract.methods.approve([tipAddress, amount]).send({from : userAddress})
+            .on('confirmation', function(confirmationNumber, receipt){
+                document.getElementById("start-button").classList.remove("button");
+                document.getElementById("start-button").classList.add("button_valid");
+                document.getElementById("start-button").innerText = "You have unlocked the token!";
+                document.getElementById("start-button").disabled = true;
+            });
+        }
+
+        function generateDepositTokenTransaction()
+        {
+            tipContract.methods.depositToken(amount, tokenContract, discordId).send({from : userAddress})
+            .on('confirmation', function(confirmationNumber, receipt){
+                document.getElementById("start-button1").classList.remove("button");
+                document.getElementById("start-button1").classList.add("button_valid");
+                document.getElementById("start-button1").innerText = "You have safely deposited your tokens!";
+                document.getElementById("start-button1").disabled = true;
+            });
         }
         
      </script>
