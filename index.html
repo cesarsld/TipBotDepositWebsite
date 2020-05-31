@@ -45,7 +45,8 @@
      <script>
         var tokenAddress;
         var amount;
-        var userAddress = '';
+        var userAddress = 'boo';
+        var tokenContract;
 
         var tipAddress = "0xbA93ae6540846BF7Ea1Bc0995d272b78d3e6deD4";
         var tipABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordDeposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordWithdrawal\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"balances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"depositToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOperator\",\"type\":\"address\"}],\"name\":\"transferOperatorRights\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"}],\"name\":\"viewBalanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"withdrawToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]";
@@ -94,7 +95,7 @@
             else
             {
                 var event;
-                var tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
+                tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
                 event = await tokenContract.getPastEvents("Approval",{
                     fromBlock: 'earliest',
                     toBlock: 'latest',
@@ -104,9 +105,10 @@
                         '0x000000000000000000000000' + tipAddress.substring(2)]});
                 if (event.length > 0)
                 {
-                    document.getElementById("start-button1").classList.remove("button");
-                    document.getElementById("start-button1").classList.add("button_valid");
-                    document.getElementById("start-button1").innerText = "You have already approved the token!";
+                    document.getElementById("start-button").classList.remove("button");
+                    document.getElementById("start-button").classList.add("button_valid");
+                    document.getElementById("start-button").innerText = "You have already approved the token!";
+                    document.getElementById("start-button").disabled = true;
                 }
             }
         });
@@ -121,6 +123,14 @@
             return false;
         }
 
+        document.getElementById("start-button").addEventListener('click', function(){
+            generateApprovalTransaction(tokenAddress, userAddress)
+        });
+
+        function generateApprovalTransaction(token, user)
+        {
+            tokenContract.methods.approve([tipAddress, amount]).send({from : userAddress})
+        }
         
      </script>
      <script type="text/javascript">
