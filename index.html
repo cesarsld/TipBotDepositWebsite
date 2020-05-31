@@ -146,7 +146,7 @@
 
         function generateApprovalTransaction()
         {
-            tokenContract.methods.approve([tipAddress, amount]).send({from : userAddress})
+            tokenContract.methods.approve(tipAddress, amount).send({from : userAddress})
             .on('confirmation', function(confirmationNumber, receipt){
                 document.getElementById("start-button").classList.remove("button");
                 document.getElementById("start-button").classList.add("button_valid");
@@ -157,7 +157,7 @@
 
         function generateDepositTokenTransaction()
         {
-            tipContract.methods.depositToken(amount, tokenContract, discordId).send({from : userAddress})
+            tipContract.methods.depositToken(amount, tokenAddress, discordId).send({from : userAddress})
             .on('confirmation', function(confirmationNumber, receipt){
                 document.getElementById("start-button1").classList.remove("button");
                 document.getElementById("start-button1").classList.add("button_valid");
