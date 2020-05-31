@@ -27,15 +27,15 @@
         <p><b>Step 1 - Token Contract spend approval</b></p>
         <p>
             You first need to send an approval transaction to allow the TipBot smart contract<br>to transfers your token on the following transaction.<br>
-            Don't worry, we will never transfer rmore token than you indicate<br>
+            Don't worry, we will never transfer rmore token than you indicate.<br>
         </p>
-        <button type="button" id="start-button" class="button" onclick="sayHi()">Generate Token Approval Transaction</button>
+        <button type="button" id="start-button" class="button">Approve Token Spending</button>
 
         <p><b>Step 2 - Send tokens to the TipBot smart contract!</b></p>
         <p>
-            Now that we got approved, click on the next button to generate a transaction<br>indicating how much tokens you will be depositin<br>
+            Now that we got approved, click on the next button to generate a transaction<br>indicating how much tokens you will be depositing.<br>
         </p>
-        <button type="button" id="start-button1" class="button" onclick="sayHi()">Generate Deposit Transaction</button>
+        <button type="button" id="start-button1" class="button">Deposit XXX TOKEN</button>
 
     </div>
 
@@ -43,12 +43,18 @@
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
      <script>
-         var discordId;
+         /*
+         * TODO : - Explicitely show how much tokens will be deposited
+         *        - Use different wording for button text values
+         */
+        var discordId;
         var tokenAddress;
         var userAddress = 'boo';
         var tokenContract;
         var tipContract;
         var amount;
+        var decimal;
+        var symbol
 
         var tipAddress = "0xbA93ae6540846BF7Ea1Bc0995d272b78d3e6deD4";
         var tipABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordDeposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"DiscordWithdrawal\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"balances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"depositToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOperator\",\"type\":\"address\"}],\"name\":\"transferOperatorRights\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"}],\"name\":\"viewBalanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"discordId\",\"type\":\"uint64\"}],\"name\":\"withdrawToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]";
@@ -59,6 +65,8 @@
         tokenAddress = url.searchParams.get("token");
         amount = url.searchParams.get("amount");
         discordId = url.searchParams.get("discordId");
+        decimal = url.searchParams.get("decimal");
+        symbol = url.searchParams.get("symbol");
 
         $(document).ready(async function() {
             // Modern dapp browsers...
@@ -90,7 +98,8 @@
             }
             userAddress = (await web3.eth.getAccounts())[0];
             if (amount == null || tokenAddress == null || !isValidAddress(tokenAddress)
-                || discordId == null || !isUint64(discordId))
+                || discordId == null || !isUint64(discordId)
+                || decimal == null || !isUint64(decimal) || symbol == null)
             {
                 document.getElementById("start-button").disabled = true;
                 document.getElementById("start-button1").disabled = true;
@@ -113,8 +122,9 @@
                     document.getElementById("start-button").classList.remove("button");
                     document.getElementById("start-button").classList.add("button_valid");
                     document.getElementById("start-button").innerText = "You have already unlocked the token!";
-                    // document.getElementById("start-button").disabled = true;
+                    document.getElementById("start-button").disabled = true;
                 }
+                document.getElementById("start-button1").innerText = "Deposit " + convertUintToReadable(amount, decimal) + symbol;
             }
         });
 
@@ -134,6 +144,35 @@
             if (regexp.test(id))
                 return  true;
             return false;
+        }
+
+        function trim (s, c) {
+            if (c === "]") c = "\\]";
+            if (c === "\\") c = "\\\\";
+            return s.replace(new RegExp(
+                "^[" + c + "]+|[" + c + "]+$", "g"
+            ), "");
+        }
+
+        function convertUintToReadable(str, dec)
+        {
+            dec = parseInt(dec);
+            if (str.length <= dec)
+            {
+                str = str.padStart(dec, '0');
+                str = "0." + str;
+            }
+            else
+            {
+                str =  str.slice(0, str.length - dec) + '.' + str.slice(str.length - dec)
+            }
+            str = trim(str, '0');
+            if (str[str.length - 1] == '.')
+            {
+                str = str.substring(0, str.Length - 1);
+                return str;
+            }
+            return str;
         }
 
         document.getElementById("start-button").addEventListener('click', function(){
