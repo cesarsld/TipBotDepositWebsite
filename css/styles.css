@@ -221,77 +221,9 @@ input[type=text] {
   -moz-appearance: textfield;
 }
 
-.input__radio-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 8px;
-}
-
-.input__radio-buttons input[type=radio] {
-  display: none;
-}
-
-.input__radio-buttons input[type="radio"]+label {
-  opacity: 1;
-  border: none;
-  border-radius: 40px;
-  background: #F3F3F3;
-  padding: 8px 16px;
-  font-size: 1.25rem;
-  font-family: inherit;
-  font-weight: bold;
-  
-  margin: 8px;
-}
-
-.input__radio-buttons input[type="radio"]:not(:checked)+label:hover {
-  cursor: pointer;
-  background: #F5F8FF;
-  transform: scale(1.1);
-  transition: 0.2s all;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05), 0 3px 6px rgba(0, 0, 0, 0.09);
-}
 
 .input__radio-buttons input[type="radio"]:checked+label {
   background: #0AB5CD;
-  color: #FFF;
-}
-
-.input__checkbox-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 8px;
-}
-
-.input__checkbox-buttons input[type=checkbox] {
-  display: none;
-}
-
-.input__checkbox-buttons input[type="checkbox"]+label {
-  opacity: 1;
-  border: none;
-  border-radius: 40px;
-  background: #F3F3F3;
-  padding: 8px 16px;
-  font-size: 1.25rem;
-  font-family: inherit;
-  font-weight: bold;
-  
-  margin: 8px;
-}
-
-.input__checkbox-buttons input[type="checkbox"]:not(:checked)+label:hover {
-  cursor: pointer;
-  background: #F5F8FF;
-  transform: scale(1.1);
-  transition: 0.2s all;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05), 0 3px 6px rgba(0, 0, 0, 0.09);
-}
-
-.input__checkbox-buttons input[type="checkbox"]:checked+label {
-  background: #4cd24c;
   color: #FFF;
 }
 
@@ -303,6 +235,21 @@ input[type=text] {
   border-width: 0px;
   border-radius: 40px;
   background: #ff6a68;
+  font-size: 1.2rem;
+  
+  position: relative;
+  margin: 16px auto;
+  display: block;
+}
+
+.button_waiting {
+  color: #fff9f9;
+  font-family: inherit;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-width: 0px;
+  border-radius: 40px;
+  background: #c99811;
   font-size: 1.2rem;
   
   position: relative;
@@ -353,24 +300,6 @@ select {
   font-size: large;
 }
 
-.day, #weekdays p {
-  width: calc(100% / 7);
-  min-width: 77px;
-}
-
-
-.topExt:not(.task1) {
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-top: 1px solid white;
-}
-
-.botExt:not(.task1) {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-bottom: 1px solid white;
-}
-
 #overlay {
   position: fixed; /* Sit on top of the page content */
   display: none; /* Hidden by default */
@@ -383,23 +312,6 @@ select {
   background-color: rgba(0,0,0,0.5); /* Black background with opacity */
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
-}
-
-#over-hour {
-  font-size: 30px;
-}
-
-#over-text, #over-text p {
-  margin: 20px 0px;
-}
-
-#hourCol, p#emptyDay {
-  width: 5%;
-  text-align: right;
-}
-
-#hourCol {
-  height: 908px;
 }
 
 .overlay-buttons {
@@ -439,16 +351,6 @@ select {
   color: rgb(36, 36, 36);
   transform: translate(-50%,-50%);
   -ms-transform: translate(-50%,-50%);
-}
-
-
-.dialog-box p {
-
-  -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
-     -moz-animation: fadein 2s; /* Firefox < 16 */
-      -ms-animation: fadein 2s; /* Internet Explorer */
-       -o-animation: fadein 2s; /* Opera < 12.1 */
-          animation: fadein 2s;
 }
 
 @keyframes fadein {
