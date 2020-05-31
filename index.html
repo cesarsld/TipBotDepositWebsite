@@ -90,7 +90,7 @@
             }
             userAddress = (await web3.eth.getAccounts())[0];
             if (amount == null || tokenAddress == null || !isValidAddress(tokenAddress)
-                || discordId == null || isUint64(discordId))
+                || discordId == null || !isUint64(discordId))
             {
                 document.getElementById("start-button").disabled = true;
                 document.getElementById("start-button1").disabled = true;
