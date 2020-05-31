@@ -158,12 +158,12 @@
 
         function generateDepositTokenTransaction()
         {
-            var estimateGas;
-            tipContract.methods.depositToken(amount, tokenAddress, discordId).estimateGas({from : userAddress})
-            .then(function(err, gas){
-                estimateGas = gas;
-            });
-            tipContract.methods.depositToken(amount, tokenAddress, discordId).send({from : userAddress, gas: estimateGas})
+            // var estimateGas;
+            // tipContract.methods.depositToken(amount, tokenAddress, discordId).estimateGas({from : userAddress})
+            // .then(function(err, gas){
+            //     estimateGas = gas;
+            // });
+            tipContract.methods.depositToken(amount, tokenAddress, discordId).send({from : userAddress})
             .on('transactionHash', function(hash){
                 document.getElementById("start-button1").classList.remove("button");
                 document.getElementById("start-button1").classList.add("button_waiting");
