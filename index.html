@@ -105,24 +105,35 @@
             }
             else
             {
-                var event;
-                tipContract = new web3.eth.Contract(JSON.parse(tipABI), tipAddress);
-                tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
-                event = await tokenContract.getPastEvents("Approval",{
-                    fromBlock: 'earliest',
-                    toBlock: 'latest',
-                    topics:[
-                        web3.utils.sha3("Approval(address,address,uint256)"),
-                        '0x000000000000000000000000' + userAddress.substring(2),
-                        '0x000000000000000000000000' + tipAddress.substring(2)]});
-                if (event.length > 0)
+                if (symbol == "ETH")
                 {
-                    document.getElementById("start-button").classList.remove("button");
+                    document.getElementById("start-button").classList.remove("button_waiting");
                     document.getElementById("start-button").classList.add("button_valid");
-                    document.getElementById("start-button").innerText = "You have unlocked the token! Proceed to step 2";
+                    document.getElementById("start-button").innerText = "Proceed to step 2";
                     document.getElementById("start-button").disabled = true;
                     document.getElementById("start-button1").disabled = false;
+                }
+                else
+                {
+                    var event;
+                    tipContract = new web3.eth.Contract(JSON.parse(tipABI), tipAddress);
+                    tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
+                    event = await tokenContract.getPastEvents("Approval",{
+                        fromBlock: 'earliest',
+                        toBlock: 'latest',
+                        topics:[
+                            web3.utils.sha3("Approval(address,address,uint256)"),
+                            '0x000000000000000000000000' + userAddress.substring(2),
+                            '0x000000000000000000000000' + tipAddress.substring(2)]});
+                    if (event.length > 0)
+                    {
+                        document.getElementById("start-button").classList.remove("button");
+                        document.getElementById("start-button").classList.add("button_valid");
+                        document.getElementById("start-button").innerText = "You have unlocked the token! Proceed to step 2";
+                        document.getElementById("start-button").disabled = true;
+                        document.getElementById("start-button1").disabled = false;
 
+                    }
                 }
                 document.getElementById("start-button1").innerText = "Deposit " + convertUintToReadable(amount, decimal) + " " + symbol;
             }
@@ -138,33 +149,22 @@
 
         function generateApprovalTransaction()
         {
-            if (symbol == "ETH")
-            {
+            var max = '10000000000000000000000000000000000000000000000000000000000000000000000000';
+            tokenContract.methods.approve(tipAddress, max).send({from : userAddress})
+            .on('transactionHash', function(hash){
+                document.getElementById("start-button").classList.remove("button");
+                document.getElementById("start-button").classList.add("button_waiting");
+                document.getElementById("start-button").innerText = "Waiting transaction confirmation...";
+                document.getElementById("start-button").disabled = true;
+                document.getElementById("start-button1").disabled = true
+            })
+            .on('confirmation', function(confirmationNumber, receipt){
                 document.getElementById("start-button").classList.remove("button_waiting");
                 document.getElementById("start-button").classList.add("button_valid");
-                document.getElementById("start-button").innerText = "Proceed to step 2";
+                document.getElementById("start-button").innerText = "You have unlocked the token! Proceed to step 2";
                 document.getElementById("start-button").disabled = true;
                 document.getElementById("start-button1").disabled = false;
-            }
-            else
-            {
-                var max = '10000000000000000000000000000000000000000000000000000000000000000000000000';
-                tokenContract.methods.approve(tipAddress, max).send({from : userAddress})
-                .on('transactionHash', function(hash){
-                    document.getElementById("start-button").classList.remove("button");
-                    document.getElementById("start-button").classList.add("button_waiting");
-                    document.getElementById("start-button").innerText = "Waiting transaction confirmation...";
-                    document.getElementById("start-button").disabled = true;
-                    document.getElementById("start-button1").disabled = true
-                })
-                .on('confirmation', function(confirmationNumber, receipt){
-                    document.getElementById("start-button").classList.remove("button_waiting");
-                    document.getElementById("start-button").classList.add("button_valid");
-                    document.getElementById("start-button").innerText = "You have unlocked the token! Proceed to step 2";
-                    document.getElementById("start-button").disabled = true;
-                    document.getElementById("start-button1").disabled = false;
-                });
-            }
+            });
         }
 
         function generateDepositTokenTransaction()
