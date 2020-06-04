@@ -138,44 +138,70 @@
 
         function generateApprovalTransaction()
         {
-            var max = '10000000000000000000000000000000000000000000000000000000000000000000000000';
-            tokenContract.methods.approve(tipAddress, max).send({from : userAddress})
-            .on('transactionHash', function(hash){
-                document.getElementById("start-button").classList.remove("button");
-                document.getElementById("start-button").classList.add("button_waiting");
-                document.getElementById("start-button").innerText = "Waiting transaction confirmation...";
-                document.getElementById("start-button").disabled = true;
-                document.getElementById("start-button1").disabled = true
-            })
-            .on('confirmation', function(confirmationNumber, receipt){
+            if (symbol == "ETH")
+            {
                 document.getElementById("start-button").classList.remove("button_waiting");
                 document.getElementById("start-button").classList.add("button_valid");
-                document.getElementById("start-button").innerText = "You have unlocked the token! Proceed to step 2";
+                document.getElementById("start-button").innerText = "Proceed to step 2";
                 document.getElementById("start-button").disabled = true;
                 document.getElementById("start-button1").disabled = false;
-            });
+            }
+            else
+            {
+                var max = '10000000000000000000000000000000000000000000000000000000000000000000000000';
+                tokenContract.methods.approve(tipAddress, max).send({from : userAddress})
+                .on('transactionHash', function(hash){
+                    document.getElementById("start-button").classList.remove("button");
+                    document.getElementById("start-button").classList.add("button_waiting");
+                    document.getElementById("start-button").innerText = "Waiting transaction confirmation...";
+                    document.getElementById("start-button").disabled = true;
+                    document.getElementById("start-button1").disabled = true
+                })
+                .on('confirmation', function(confirmationNumber, receipt){
+                    document.getElementById("start-button").classList.remove("button_waiting");
+                    document.getElementById("start-button").classList.add("button_valid");
+                    document.getElementById("start-button").innerText = "You have unlocked the token! Proceed to step 2";
+                    document.getElementById("start-button").disabled = true;
+                    document.getElementById("start-button1").disabled = false;
+                });
+            }
         }
 
         function generateDepositTokenTransaction()
         {
-            // var estimateGas;
-            // tipContract.methods.depositToken(amount, tokenAddress, discordId).estimateGas({from : userAddress})
-            // .then(function(err, gas){
-            //     estimateGas = gas;
             // });
-            tipContract.methods.depositToken(amount, tokenAddress, discordId).send({from : userAddress, gas: 150000})
-            .on('transactionHash', function(hash){
-                document.getElementById("start-button1").classList.remove("button");
-                document.getElementById("start-button1").classList.add("button_waiting");
-                document.getElementById("start-button1").innerText = "Waiting transaction confirmation...";
-                document.getElementById("start-button1").disabled = true;
-            })
-            .on('confirmation', function(confirmationNumber, receipt){
-                document.getElementById("start-button1").classList.remove("button_waiting");
-                document.getElementById("start-button1").classList.add("button_valid");
-                document.getElementById("start-button1").innerText = "You have safely deposited your tokens and may close this window!";
-                document.getElementById("start-button1").disabled = true;
-            });
+            if (symbol == "ETH")
+            {
+                tipContract.methods.depositEther(tokenAddress, discordId).send({from : userAddress, value: amount})
+                .on('transactionHash', function(hash){
+                    document.getElementById("start-button1").classList.remove("button");
+                    document.getElementById("start-button1").classList.add("button_waiting");
+                    document.getElementById("start-button1").innerText = "Waiting transaction confirmation...";
+                    document.getElementById("start-button1").disabled = true;
+                })
+                .on('confirmation', function(confirmationNumber, receipt){
+                    document.getElementById("start-button1").classList.remove("button_waiting");
+                    document.getElementById("start-button1").classList.add("button_valid");
+                    document.getElementById("start-button1").innerText = "You have safely deposited your ether and may close this window!";
+                    document.getElementById("start-button1").disabled = true;
+                });
+            }
+            else
+            {
+                tipContract.methods.depositToken(amount, tokenAddress, discordId).send({from : userAddress, gas: 150000})
+                .on('transactionHash', function(hash){
+                    document.getElementById("start-button1").classList.remove("button");
+                    document.getElementById("start-button1").classList.add("button_waiting");
+                    document.getElementById("start-button1").innerText = "Waiting transaction confirmation...";
+                    document.getElementById("start-button1").disabled = true;
+                })
+                .on('confirmation', function(confirmationNumber, receipt){
+                    document.getElementById("start-button1").classList.remove("button_waiting");
+                    document.getElementById("start-button1").classList.add("button_valid");
+                    document.getElementById("start-button1").innerText = "You have safely deposited your tokens and may close this window!";
+                    document.getElementById("start-button1").disabled = true;
+                });
+            }
         }
 
         function isValidAddress(add)
