@@ -105,6 +105,7 @@
             }
             else
             {
+                tipContract = new web3.eth.Contract(JSON.parse(tipABI), tipAddress);
                 if (symbol == "ETH")
                 {
                     document.getElementById("start-button").classList.remove("button_waiting");
@@ -116,7 +117,6 @@
                 else
                 {
                     var event;
-                    tipContract = new web3.eth.Contract(JSON.parse(tipABI), tipAddress);
                     tokenContract = new web3.eth.Contract(JSON.parse(erc20ABI), tokenAddress);
                     event = await tokenContract.getPastEvents("Approval",{
                         fromBlock: 'earliest',
