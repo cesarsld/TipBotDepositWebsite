@@ -172,7 +172,7 @@
             // });
             if (symbol == "ETH")
             {
-                tipContract.methods.depositEther(tokenAddress, discordId).send({from : userAddress, value: amount})
+                tipContract.methods.depositEther(discordId).send({from : userAddress, value: amount})
                 .on('transactionHash', function(hash){
                     document.getElementById("start-button1").classList.remove("button");
                     document.getElementById("start-button1").classList.add("button_waiting");
